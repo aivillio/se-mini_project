@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VPS · Entry kiosk</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="logo">P</span>Vehicle Parking System</div><nav></nav><div class="who"></div></header>
+<main>
+  <h1>Entry kiosk</h1>
+  <p class="sub">VPS-F-001 to F-005 · plate capture → nearest slot → HMAC-signed QR ticket → barrier.</p>
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>Vehicle arrives</h2>
+      <div class="row">
+        <div><label for="lane">Lane</label><select id="lane"><option>ENTRY-1</option><option>ENTRY-2</option></select></div>
+        <div><label for="plate">Number plate (what the ANPR camera sees)</label><input id="plate" value="KA 05 MN 4821" autocomplete="off"></div>
+      </div>
+      <label>Vehicle category</label>
+      <div class="seg" id="cat">
+        <button data-v="2W">Two-wheeler</button><button data-v="4W" class="on">Car (4W)</button>
+        <button data-v="EV">EV</button><button data-v="HANDICAP">Accessible</button>
+      </div>
+      <label for="res">Reservation code (optional)</label>
+      <input id="res" placeholder="e.g. 7KQ2M9XA" autocomplete="off">
+      <details style="margin-top:14px">
+        <summary class="muted">Simulation controls</summary>
+        <div class="row">
+          <div><label for="conf">ANPR confidence: <b id="confv">0.97</b></label><input id="conf" type="range" min="0.5" max="1" step="0.01" value="0.97"></div>
+          <div><label for="arr">Arrival time</label>
+            <select id="arr"><option value="0" selected>Now</option><option value="45">45 min ago</option>
+              <option value="130">2 h 10 min ago</option><option value="320">5 h 20 min ago</option><option value="1560">26 h ago</option></select></div>
+        </div>
+        <p class="muted">Arrival time lets you see a realistic fare at the exit without waiting. The API accepts back-dated edge timestamps up to 72 h (offline replay).</p>
+      </details>
+      <div class="btns"><button id="go">Scan plate &amp; issue ticket</button></div>
+    </div>
+
+    <div class="card">
+      <h2>Ticket <span class="tag" id="tstate">waiting</span></h2>
+      <div id="empty" class="empty">No vehicle yet. Issue a ticket to see the allocated slot and QR code.</div>
+      <div id="ticket" class="hidden">
+        <div class="qrbox">
+          <img id="qr" alt="Ticket QR code">
+          <div>
+            <div class="muted">Proceed to slot</div>
+            <div class="big" id="slot">–</div>
+            <div id="slotinfo" class="muted"></div>
+          </div>
+        </div>
+        <dl class="kv" style="margin-top:14px">
+          <dt>Ticket ID</dt><dd class="mono" id="tid"></dd>
+          <dt>Vehicle</dt><dd id="veh"></dd>
+          <dt>Entry time</dt><dd id="etime"></dd>
+          <dt>Delivery</dt><dd id="deliv"></dd>
+        </dl>
+        <table class="timing" style="margin-top:12px">
+          <thead><tr><th>Step</th><th>Target</th><th class="num">Measured</th></tr></thead>
+          <tbody id="timings"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2>Lane hardware <span class="tag" id="lanestate"></span></h2>
+    <div class="lane" id="lanevis"><div class="road"></div><div class="loop"></div><div class="post"></div><div class="arm"></div><div class="car">🚙</div><div class="state" id="lanetxt"></div></div>
+    <div class="btns">
+      <button class="secondary" id="onloop">Vehicle on ground loop</button>
+      <button class="secondary" id="lower">Try to lower barrier</button>
+      <button class="secondary" id="cleared">Vehicle clears loop</button>
+    </div>
+    <p class="muted">VPS-F-004: the barrier refuses to descend while the loop detects a vehicle and lowers automatically once it clears.</p>
+  </div>
+</main>
+<script src="static/app.js"></script>
+<script src="static/entry.js"></script>
+</body>
+</html>
