@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VPS · Exit &amp; pay</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="logo">P</span>Vehicle Parking System</div><nav></nav><div class="who"></div></header>
+<main>
+  <h1>Exit &amp; pay</h1>
+  <p class="sub">VPS-F-008 to F-014 · scan ticket → tariff + surge + coupon + GST → cashless payment → barrier opens on PAID.</p>
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>1 · Scan at exit</h2>
+      <label for="qr">QR ticket payload (scanned)</label>
+      <textarea id="qr" placeholder="Paste the QR payload, or use the last ticket issued at the entry kiosk"></textarea>
+      <div class="btns" style="margin-top:8px"><button class="secondary small" id="last">Use last issued ticket</button>
+        <button class="secondary small" id="tamper">Tamper with payload</button></div>
+      <div class="row">
+        <div><label for="plate">…or number plate</label><input id="plate" placeholder="KA05MN4821"></div>
+        <div><label for="coupon">Coupon code</label><input id="coupon" placeholder="WELCOME10"></div>
+      </div>
+      <div class="btns"><button id="scan">Fetch invoice</button></div>
+    </div>
+
+    <div class="card">
+      <h2>2 · Invoice <span class="tag" id="istate">–</span></h2>
+      <div id="noinv" class="empty">Scan a ticket to see the bill.</div>
+      <div id="inv" class="hidden">
+        <dl class="kv">
+          <dt>Vehicle</dt><dd id="i-veh"></dd><dt>Slot</dt><dd id="i-slot"></dd>
+          <dt>Entry</dt><dd id="i-in"></dd><dt>Duration</dt><dd id="i-dur"></dd>
+        </dl>
+        <table style="margin-top:12px"><tbody id="lines"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px" id="paycard">
+    <h2>3 · Pay</h2>
+    <div class="seg" id="method">
+      <button data-v="upi" class="on">UPI (dynamic QR)</button><button data-v="card">Credit / debit card</button>
+      <button data-v="wallet">Wallet</button><button data-v="netbanking">NetBanking</button>
+    </div>
+    <div id="cardrow" class="hidden"><label for="card">Card number (only the last 4 digits are stored)</label><input id="card" value="4111 1111 1111 1111"></div>
+    <div class="btns"><button id="pay" disabled>Pay now</button></div>
+
+    <div id="pending" class="hidden" style="margin-top:16px">
+      <div class="qrbox"><img id="upiqr" alt="UPI payment QR">
+        <div><div class="muted">Order</div><div class="mono" id="order"></div>
+          <div class="big" id="amt"></div>
+          <p class="muted">Customer scans this with any UPI app. The gateway then calls our signed webhook.</p>
+          <div class="btns"><button id="sim-ok">Simulate payment success</button><button class="danger" id="sim-fail">Simulate failure</button></div>
+        </div></div>
+    </div>
+
+    <div id="done" class="hidden" style="margin-top:16px">
+      <div class="banner ok" id="donemsg"></div>
+      <div class="lane up" id="exitlane"><div class="road"></div><div class="loop"></div><div class="post"></div><div class="arm"></div><div class="car">🚙</div><div class="state">EXIT-1 · barrier UP</div></div>
+      <div class="btns">
+        <a id="rcpt" target="_blank"><button class="secondary">Open GST receipt (PDF)</button></a>
+        <input id="mobile" placeholder="10-digit mobile" style="max-width:200px"><button class="secondary" id="sms">SMS receipt</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="static/app.js"></script>
+<script src="static/exit.js"></script>
+</body>
+</html>
