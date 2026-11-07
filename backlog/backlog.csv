@@ -1,0 +1,36 @@
+id,title,user_story,requirements,owner,story_points,sprint,labels,test_cases,pr
+VPS-US-01,Project scaffold and CI pipeline,"As the team, we want a shared repo layout, config, DB schema and CI so every PR is linted and tested automatically",Infra,Angelo,3,Sprint 1,"ci,infra",TC-SEC-01,PR-01
+VPS-US-02,Security core: signed tickets and encrypted PII,"As the facility, we want QR tickets signed with HMAC-SHA256 and PII encrypted with AES-256 so tickets cannot be forged and data leaks expose nothing","VPS-SR-002,VPS-SR-004",Angelo,5,Sprint 1,security,"TC-SEC-02,TC-SEC-04",PR-01
+VPS-US-03,Immutable audit log,"As a facility manager, I want every override and tariff edit in a write-once tamper-evident log retained for 3 years",VPS-SR-005,Angelo,5,Sprint 1,security,TC-SEC-05,PR-01
+VPS-US-04,Staff login with RBAC and admin MFA,"As an admin, I want password + TOTP login and role-based access so only authorised staff can change configuration",VPS-SR-003,Angelo,8,Sprint 1,security,TC-SEC-03,PR-01
+VPS-US-05,Backlog GitHub project and PR process,"As the QA lead, I want the backlog, labels, milestones, PR template and automation set up so work is traceable to the SRS",Process,Himansh,2,Sprint 1,"process,docs",-,PR-02
+VPS-US-06,Gate hardware simulators,"As a developer, I want ANPR camera, boom barrier, ground loop and printer stubs so the software can be built and tested without physical hardware","VPS-F-001,VPS-F-003,VPS-F-004",Shweta,5,Sprint 1,slots-and-sensors,"TC-ENT-01,TC-ENT-03,TC-ENT-04",PR-03
+VPS-US-07,Nearest vacant slot allocation,"As a driver, I want to be sent to the nearest free bay for my vehicle type (2W/4W/EV/accessible)",VPS-F-005,Shweta,5,Sprint 1,slots-and-sensors,"TC-SLOT-01,TC-SLOT-04",PR-03
+VPS-US-08,Slot occupancy sensors and LEDs,"As a driver, I want bay LEDs to turn red within 2 s of a car parking so I can see free bays at a glance",VPS-F-006,Shweta,3,Sprint 1,slots-and-sensors,TC-SLOT-02,PR-03
+VPS-US-09,VMS availability boards,"As a driver, I want entrance and floor signs to show free spaces within 1 s of a change",VPS-F-007,Shweta,3,Sprint 1,slots-and-sensors,TC-SLOT-03,PR-03
+VPS-US-10,Edge store-and-forward queue,"As operations, I want lanes to keep working during WAN loss and sync automatically on reconnect",VPS-NF-005,Shweta,5,Sprint 1,edge-controller,TC-Fault-01,PR-03
+VPS-US-11,Vehicle entry and QR ticket,"As a driver, I want my plate read and a QR ticket issued and the barrier raised in under 3 s","VPS-F-001,VPS-F-002,VPS-F-003,VPS-NF-001",Angelo,8,Sprint 1,ingress,"TC-ENT-01,TC-ENT-02,TC-ENT-03,TC-ENT-05,TC-ENT-06,TC-Perf-01",PR-04
+VPS-US-12,Lane safety loop and barrier API,"As a driver, I want the barrier never to come down while my car is under it",VPS-F-004,Angelo,2,Sprint 1,ingress,TC-ENT-04,PR-04
+VPS-US-13,Entry kiosk and overview UI,"As a driver, I want a kiosk screen that shows my slot, QR ticket and timings",UI,Angelo,3,Sprint 1,ingress,-,PR-04
+VPS-US-14,Tariff engine with grace period,"As finance, I want fees computed from duration, category and tiered rates with a 15-minute free grace period","VPS-F-008,VPS-F-009",Akarsh,5,Sprint 1,billing-and-payments,"TC-BILL-01,TC-BILL-02",PR-05
+VPS-US-15,Exit scan and invoice,"As a driver, I want to scan my ticket or plate at the exit and see my bill within 1 s",VPS-F-011,Akarsh,3,Sprint 1,billing-and-payments,TC-PAY-01,PR-05
+VPS-US-16,Cashless payment via gateway webhook,"As a driver, I want to pay by UPI QR, card or wallet; card numbers must never be stored","VPS-F-012,VPS-NF-004",Akarsh,8,Sprint 1,billing-and-payments,"TC-PAY-02,TC-PAY-05,TC-SEC-06",PR-05
+VPS-US-17,Exit barrier on PAID only,"As security, I want the exit barrier to open only after payment is verified",VPS-F-013,Akarsh,2,Sprint 1,billing-and-payments,TC-PAY-03,PR-05
+VPS-US-18,Exit and payment UI,"As a driver, I want an exit screen with the invoice, payment options and receipt",UI,Akarsh,3,Sprint 1,billing-and-payments,-,PR-05
+VPS-US-19,Surge pricing and promo coupons,"As the business, I want peak-hour surge rates and promo coupons applied correctly",VPS-F-010,Akarsh,5,Sprint 1,billing-and-payments,TC-BILL-03,PR-05
+VPS-US-35,Live display UI,"As a driver, I want to see VMS boards and a live bay map with sensor LEDs","VPS-F-006,VPS-F-007",Shweta,2,Sprint 1,slots-and-sensors,-,PR-06
+VPS-US-20,48-hour slot pre-booking,"As a driver, I want to reserve a bay up to 48 hours ahead and receive a reservation code",VPS-F-015,Himansh,5,Sprint 2,reservations,"TC-RES-01,TC-RES-03",PR-07
+VPS-US-21,No-show auto release,"As operations, I want unclaimed reservations released 30 minutes after their start time",VPS-F-016,Himansh,3,Sprint 2,reservations,TC-RES-02,PR-07
+VPS-US-22,Admin console,"As an admin, I want to change tariffs, surge rules, coupons, zones/slots and staff accounts without a restart",VPS-F-017,Himansh,8,Sprint 2,admin-and-reports,TC-ADM-01,PR-07
+VPS-US-23,Revenue occupancy and turnaround reports,"As a facility manager, I want daily/monthly reports exportable as CSV/PDF in under 5 s",VPS-F-018,Himansh,5,Sprint 2,admin-and-reports,TC-ADM-02,PR-07
+VPS-US-24,Booking and admin UI,"As a driver/admin, I want web pages for booking and for the admin console",UI,Himansh,5,Sprint 2,"reservations,admin-and-reports",-,PR-07
+VPS-US-30,TLS 1.3 server and dev tooling,"As security, I want the server to accept only TLS 1.3 connections",VPS-SR-001,Angelo,3,Sprint 2,security,TC-SEC-01,PR-08
+VPS-US-25,GST tax receipts,"As accounting, I want itemised GST receipts by thermal printer, e-mail or SMS",VPS-F-014,Akarsh,5,Sprint 2,billing-and-payments,TC-PAY-04,PR-09
+VPS-US-26,Deviation log,"As the team, we want every deviation from the SRS/SAD/Test Plan written down for the final demo",Process,Akarsh,1,Sprint 2,docs,-,PR-09
+VPS-US-27,Sprint 1 demo video,"As the evaluator, I want a 1-minute video of the Sprint 1 working product in the repo",Process,Akarsh,1,Sprint 2,docs,-,PR-09
+VPS-US-28,Edge controller API and WAN simulation,"As an admin, I want to see the offline queue and simulate WAN loss/restore",VPS-NF-005,Shweta,3,Sprint 2,edge-controller,TC-Fault-01,PR-10
+VPS-US-29,Attendant POS UI,"As an attendant, I want an exceptions desk for alerts, manual entry, cash and audited overrides",Attendant role (SRS 2.3),Shweta,3,Sprint 2,attendant,-,PR-10
+VPS-US-31,Resilience and reliability tests,"As QA, I want automated tests for 72 h WAN outage, controller loss, gateway outage and a soak run","VPS-NF-002,VPS-NF-005",Shweta,3,Sprint 3,tests,"TC-Fault-01,TC-Rel-01",PR-11
+VPS-US-32,End-to-end journey tests and Sprint 2 video,"As QA, I want full driver/attendant/admin journeys tested through the API",System,Akarsh,3,Sprint 3,tests,TC-SYS-01..05,PR-12
+VPS-US-33,Security validation suite,"As QA, I want TLS handshake, RBAC matrix, PII-at-rest, counterfeit QR and audit tamper tests","VPS-SR-001..005,VPS-NF-004",Angelo,3,Sprint 3,"tests,security",TC-SEC-01..06,PR-13
+VPS-US-34,Performance tests and test reports,"As QA lead, I want NF-001/NF-003 load tests and the unit, system validation, code and branch coverage reports in docs/","VPS-NF-001,VPS-NF-003",Himansh,5,Sprint 3,"tests,docs","TC-Perf-01,TC-Scale-01",PR-14
