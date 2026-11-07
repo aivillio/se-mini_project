@@ -1,0 +1,43 @@
+[project]
+name = "vehicle-parking-system"
+version = "1.1.0"
+description = "Vehicle Parking System (VPS) - SE Mini Project, Group 6, PES University"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "tc(id): links a test to a Test Case ID in the Test Case Specification (e.g. TC-ENT-01)",
+    "req(id): links a test to an SRS requirement ID (e.g. VPS-F-001)",
+    "system: end-to-end system validation test",
+    "perf: performance / scalability test",
+]
+addopts = "-q"
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["vps"]
+branch = true
+omit = ["vps/__main__.py"]   # thin CLI wrapper, exercised by the perf suite as a subprocess
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]
+
+[tool.ruff]
+line-length = 125
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E501"]   # report templates and catalogue text
+
+[tool.ruff.lint.isort]
+known-first-party = ["vps", "tests"]
