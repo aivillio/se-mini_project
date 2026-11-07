@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - run: ruff check .
+
+  test:
+    name: Unit + system tests (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Run tests with branch coverage
+        run: >
+          pytest tests --ignore=tests/perf
+          --cov=vps --cov-branch --cov-report=term --cov-report=xml --cov-report=html
+          --junitxml=junit.xml --html=test-report.html --self-contained-html
+          --cov-fail-under=90
+      - name: Upload test & coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-py${{ matrix.python }}
+          path: |
+            junit.xml
+            test-report.html
+            coverage.xml
+            htmlcov/
+
+  performance:
+    name: Performance & scalability (NF-001 / NF-003)
+    runs-on: ubuntu-latest
+    needs: test
+    # shared CI runners have noisy neighbours: results are published but do not block merges
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Performance suite
+        run: |
+          if [ -d tests/perf ]; then pytest tests/perf -v; else echo "no performance suite yet"; fi
+        env:
+          VPS_PERF_OUT: perf-metrics.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perf-metrics
+          path: perf-metrics.json
