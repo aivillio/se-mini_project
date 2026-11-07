@@ -1,0 +1,11 @@
+# Repo owner reviews every PR (Part 2: "Repo owners should review and commit the PR").
+*                       @aivillio
+
+# Module owners are added as second reviewers for their areas
+/vps/allocation.py      @aivillio @shwetapatil7
+/vps/sensors.py         @aivillio @shwetapatil7
+/vps/edge_queue.py      @aivillio @shwetapatil7
+/vps/reservation.py     @aivillio @HimanshAhuja
+/vps/reports.py         @aivillio @HimanshAhuja
+/tests/                 @aivillio @HimanshAhuja
+/docs/                  @aivillio @HimanshAhuja
