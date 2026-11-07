@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VPS · Live display</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="logo">P</span>Vehicle Parking System</div><nav></nav><div class="who"></div></header>
+<main>
+  <h1>Live display</h1>
+  <p class="sub">VPS-F-006 / F-007 · slot sensors drive the overhead LEDs and the VMS boards. Click a bay to simulate its sensor.</p>
+  <div class="grid cols-4" id="boards"></div>
+  <div class="card" style="margin-top:18px">
+    <h2>Slot map <span class="tag" id="lat">–</span></h2>
+    <div class="legend" style="margin-bottom:14px">
+      <span><i class="led GREEN"></i>Vacant</span><span><i class="led RED"></i>Occupied / allocated</span>
+      <span><i class="led BLUE"></i>Reserved</span><span><i class="led OFF"></i>Disabled</span>
+    </div>
+    <div id="map"></div>
+  </div>
+</main>
+<script src="static/app.js"></script>
+<script src="static/display.js"></script>
+</body>
+</html>
