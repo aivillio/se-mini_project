@@ -1,0 +1,29 @@
+id,issue,title,owner,story_points,sprint,closed_by,test_cases
+VPS-SR-002,,Password Hashing and PII Encryption at Rest,Angelo,5,Sprint 1,PR-01,TC-SEC-02
+VPS-SR-003,,Role-Based Access Control and Admin MFA,Angelo,8,Sprint 1,PR-01,TC-SEC-03
+VPS-SR-004,,HMAC-Signed QR Tickets,Angelo,3,Sprint 1,PR-01,TC-SEC-04
+VPS-SR-005,,Immutable Audit Log,Angelo,5,Sprint 1,PR-01,TC-SEC-05
+VPS-F-005,5,Nearest Vacant Parking Slot Allocation,Shweta,5,Sprint 1,PR-03,TC-SLOT-01;TC-SLOT-04
+VPS-F-006,6,Real-Time Parking Slot Occupancy Detection,Shweta,5,Sprint 1,PR-03,TC-SLOT-02
+VPS-F-001,1,Vehicle Number Plate Recognition,Angelo,5,Sprint 1,PR-04,TC-ENT-01;TC-ENT-06
+VPS-F-002,2,QR Ticket Generation,Angelo,5,Sprint 1,PR-04,TC-ENT-02;TC-ENT-05
+VPS-F-003,3,Entry Boom Barrier Control,Angelo,2,Sprint 1,PR-04,TC-ENT-03
+VPS-F-004,4,Ground Loop Safety Check,Angelo,3,Sprint 1,PR-04,TC-ENT-04
+VPS-F-008,8,Dynamic Parking Fare Calculation,Akarsh,5,Sprint 1,PR-05,TC-BILL-01
+VPS-F-009,9,15-Minute Grace Period,Akarsh,2,Sprint 1,PR-05,TC-BILL-02
+VPS-F-010,10,Peak-Hour Surge Pricing and Promotional Coupons,Akarsh,5,Sprint 1,PR-05,TC-BILL-03
+VPS-F-011,11,Exit QR Code or Number Plate Scanning,Akarsh,3,Sprint 1,PR-05,TC-PAY-01
+VPS-F-012,12,Cashless Parking Payment,Akarsh,8,Sprint 1,PR-05,TC-PAY-02;TC-PAY-05
+VPS-F-013,13,Exit Barrier Control,Akarsh,2,Sprint 1,PR-05,TC-PAY-03
+VPS-NF-004,22,Data Security and Payment Compliance,Akarsh,3,Sprint 1,PR-05,TC-SEC-06
+VPS-F-007,7,Real-Time Parking Vacancy Display,Shweta,5,Sprint 1,PR-06,TC-SLOT-03
+VPS-F-015,15,Advance Parking Slot Reservation,Himansh,5,Sprint 2,PR-07,TC-RES-01;TC-RES-03
+VPS-F-016,16,Automatic Reservation Release,Himansh,3,Sprint 2,PR-07,TC-RES-02
+VPS-F-017,17,Admin Configuration Console,Himansh,8,Sprint 2,PR-07,TC-ADM-01
+VPS-F-018,18,Parking Reports and Analytics,Himansh,5,Sprint 2,PR-07,TC-ADM-02
+VPS-SR-001,,TLS 1.3 Mandatory on All Connections,Angelo,3,Sprint 2,PR-08,TC-SEC-01
+VPS-F-014,14,GST Invoice Generation,Akarsh,5,Sprint 2,PR-09,TC-PAY-04
+VPS-NF-005,23,Offline Operation and Data Synchronization,Shweta,8,Sprint 2,PR-10,TC-Fault-01
+VPS-NF-002,20,System Availability,Shweta,3,Sprint 3,PR-11,TC-Rel-01
+VPS-NF-001,19,System Performance,Himansh,3,Sprint 3,PR-14,TC-Perf-01
+VPS-NF-003,21,System Scalability,Himansh,5,Sprint 3,PR-14,TC-Scale-01

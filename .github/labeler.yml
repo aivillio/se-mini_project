@@ -1,0 +1,36 @@
+ingress:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/ingress.py", "vps/api/ingress.py", "web/entry.html", "web/static/entry.js"]
+slots-and-sensors:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/allocation.py", "vps/sensors.py", "vps/hardware.py", "vps/plates.py", "vps/api/slots.py",
+                               "web/display.html", "web/static/display.js"]
+edge-controller:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/edge_queue.py", "vps/api/edge.py"]
+billing-and-payments:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/tariff.py", "vps/payment.py", "vps/egress.py", "vps/receipt.py", "vps/api/egress.py",
+                               "vps/api/receipts.py", "web/exit.html", "web/static/exit.js"]
+reservations:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/reservation.py", "vps/scheduler.py", "vps/api/reservations.py", "web/booking.html",
+                               "web/static/booking.js"]
+admin-and-reports:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/api/admin.py", "vps/api/reports.py", "vps/reports.py", "web/admin.html", "web/static/admin.js"]
+security:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/security.py", "vps/auth.py", "vps/audit.py", "vps/tls.py", "vps/api/auth.py", "vps/api/deps.py"]
+attendant:
+  - changed-files:
+      - any-glob-to-any-file: ["vps/alerts.py", "web/attendant.html", "web/static/attendant.js"]
+tests:
+  - changed-files:
+      - any-glob-to-any-file: ["tests/**"]
+docs:
+  - changed-files:
+      - any-glob-to-any-file: ["docs/**", "*.md", "backlog/**"]
+ci:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**"]
