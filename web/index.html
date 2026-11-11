@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VPS · Overview</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="logo">P</span>Vehicle Parking System</div><nav></nav><div class="who"></div></header>
+<main>
+  <h1>Facility overview</h1>
+  <p class="sub">Live status of the car park. Gate hardware (ANPR, barriers, loops, slot sensors) is simulated.</p>
+
+  <div class="grid cols-4" style="margin-bottom:18px">
+    <div class="card stat"><div class="n" id="s-free">–</div><div class="l">Spaces free</div></div>
+    <div class="card stat"><div class="n" id="s-occ">–</div><div class="l">Occupied / allocated</div></div>
+    <div class="card stat"><div class="n" id="s-res">–</div><div class="l">Reserved</div></div>
+    <div class="card stat"><div class="n" id="s-edge">–</div><div class="l">Edge link · queued events</div></div>
+  </div>
+
+  <div class="grid cols-3">
+    <a class="card tile" href="entry.html"><div class="ic">🚗</div><h3>Entry kiosk</h3><p>ANPR plate capture, slot allocation, signed QR ticket, barrier and ground-loop safety.</p></a>
+    <a class="card tile" href="exit.html"><div class="ic">💳</div><h3>Exit &amp; pay</h3><p>Scan ticket, see the GST invoice, pay by UPI / card / wallet, barrier opens on PAID.</p></a>
+    <a class="card tile" href="display.html"><div class="ic">🅿️</div><h3>Live display</h3><p>Entrance and floor VMS boards plus the slot map with sensor LEDs.</p></a>
+    <a class="card tile" href="booking.html"><div class="ic">📅</div><h3>Pre-book a slot</h3><p>Reserve up to 48 hours ahead. Unclaimed bookings release after 30 minutes.</p></a>
+    <a class="card tile" href="attendant.html"><div class="ic">🧑‍🔧</div><h3>Attendant POS</h3><p>Alerts, manual entry for unreadable plates, cash desk and audited overrides.</p></a>
+    <a class="card tile" href="admin.html"><div class="ic">⚙️</div><h3>Admin console</h3><p>MFA login, tariffs, surge and coupons, layout, users, reports and audit trail.</p></a>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2>Lanes</h2>
+    <table><thead><tr><th>Lane</th><th>Direction</th><th>Barrier</th><th>Loop</th><th>Controller</th></tr></thead><tbody id="lanes"></tbody></table>
+  </div>
+  <p class="muted" style="margin-top:14px">API docs: <a href="/docs">/docs</a> · Health: <a href="/health">/health</a></p>
+</main>
+<script src="static/app.js"></script>
+<script src="static/index.js"></script>
+</body>
+</html>
