@@ -1,0 +1,43 @@
+{
+  "ingress": {
+    "transactions": 200,
+    "p50_ms": 2.45,
+    "p90_ms": 2.93,
+    "p99_ms": 5.03,
+    "max_ms": 24.89,
+    "server_side_p90_ms": 0.3,
+    "target_p90_ms": 3000
+  },
+  "scale": {
+    "p95_by_endpoint_ms": {
+      "ingress": 98.53,
+      "sensor_event": 79.72,
+      "vms": 53.38,
+      "nearest_slot": 58.85
+    },
+    "requests": 1000,
+    "concurrency": 25,
+    "slots": 10000,
+    "lanes": 50,
+    "throughput_rps": 675.8,
+    "p50_ms": 31.16,
+    "p95_ms": 77.58,
+    "p99_ms": 108.92,
+    "max_ms": 155.65,
+    "server_errors": 0,
+    "target_p95_ms": 200
+  },
+  "exports": {
+    "rows": 5000,
+    "times_ms": {
+      "revenue.csv": 70.09,
+      "revenue.pdf": 81.53,
+      "turnaround.csv": 41.9,
+      "turnaround.pdf": 49.03,
+      "occupancy.csv": 34.88,
+      "occupancy.pdf": 42.56
+    },
+    "max_ms": 81.53,
+    "target_ms": 5000
+  }
+}
