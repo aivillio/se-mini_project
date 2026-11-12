@@ -15,3 +15,5 @@ htmlcov/
 reports-tmp/
 certs/
 .env
+node_modules/
+package-lock.json

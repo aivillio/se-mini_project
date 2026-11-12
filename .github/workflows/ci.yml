@@ -14,11 +14,90 @@ concurrency:
 permissions:
   contents: read
 
-# Every job writes a table to its run Summary page (scripts/ci_summary.py); the last job collects them.
+# Stage 1 builds and smoke-tests the app; stage 2 runs testing, linting and security scans for the backend (vps/)
+# and the frontend (web/) in parallel; the pipeline summary collects every job's results. Each job writes a table
+# to the run's Summary page through scripts/ci_summary.py.
 jobs:
-  lint:
-    name: Lint (ruff)
+  build:
+    name: Build and Setup
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Byte-compile, start the app and check /health
+        run: python scripts/ci_summary.py build
+
+  backend-tests:
+    name: Backend Testing
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: |
+            3.11
+            3.12
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Unit + system tests on Python 3.11
+        run: |
+          python3.11 -m pip install -q -r requirements-dev.txt
+          python3.11 -m pytest tests/unit tests/system -q -p no:cacheprovider --junitxml=junit-py311.xml
+      - name: Unit + system tests on Python 3.12 with branch coverage (gate 90%)
+        run: |
+          python3.12 -m pip install -q -r requirements-dev.txt
+          python3.12 -m pytest tests/unit tests/system \
+            --cov=vps --cov-branch --cov-report=term --cov-report=xml --cov-report=html \
+            --junitxml=junit.xml --html=test-report.html --self-contained-html --cov-fail-under=90
+      - name: Job summary
+        if: always()
+        run: |
+          python3.12 scripts/ci_summary.py tests junit-py311.xml - "Backend Testing (Python 3.11)"
+          python3.12 scripts/ci_summary.py tests junit.xml coverage.xml "Backend Testing (Python 3.12, with coverage)"
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: backend-test-reports
+          path: |
+            junit.xml
+            junit-py311.xml
+            test-report.html
+            coverage.xml
+            htmlcov/
+
+  frontend-tests:
+    name: Frontend Testing
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: UI contract tests (pages, assets, element ids, API routes, headers)
+        run: pytest tests/frontend -v -p no:cacheprovider --junitxml=junit-frontend.xml
+      - name: Job summary
+        if: always()
+        run: python scripts/ci_summary.py tests junit-frontend.xml - "Frontend Testing"
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: frontend-test-reports
+          path: junit-frontend.xml
+
+  backend-lint:
+    name: Backend Linting (ruff)
+    runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -38,9 +117,10 @@ jobs:
         if: steps.ruff.outputs.code != '0'
         run: exit 1
 
-  frontend:
-    name: Frontend checks (JS syntax, page links)
+  frontend-lint:
+    name: Frontend Linting (ESLint)
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -49,12 +129,25 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Check web/ pages and scripts
-        run: python scripts/ci_summary.py frontend
+      - run: npm install --no-save --no-audit --no-fund eslint@9 @eslint/js@9 globals@16
+      - name: ESLint web/static
+        id: eslint
+        run: |
+          set +e
+          npx eslint web/static -f json -o eslint.json
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          npx eslint web/static || true
+      - name: Job summary
+        if: always()
+        run: python scripts/ci_summary.py eslint eslint.json
+      - name: Fail on lint errors
+        if: steps.eslint.outputs.code != '0'
+        run: exit 1
 
-  security:
-    name: Security scan (bandit + pip-audit)
+  backend-security:
+    name: Backend Security Scan
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -75,66 +168,40 @@ jobs:
             bandit.json
             pip-audit.json
 
-  codeql:
-    name: CodeQL security analysis (${{ matrix.language }})
+  frontend-security:
+    name: Frontend Security Scan
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [python, javascript-typescript]
-    steps:
-      - uses: actions/checkout@v5
-      - uses: github/codeql-action/init@v4
-        with:
-          languages: ${{ matrix.language }}
-          build-mode: none
-      - uses: github/codeql-action/analyze@v4
-        with:
-          category: /language:${{ matrix.language }}
-
-  test:
-    name: Unit + system tests (py${{ matrix.python }})
-    runs-on: ubuntu-latest
-    needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        python: ["3.11", "3.12"]
+    needs: build
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-          python-version: ${{ matrix.python }}
+          python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements-dev.txt
-      - run: pip install -r requirements-dev.txt
-      - name: Run tests with branch coverage
-        run: >
-          pytest tests --ignore=tests/perf
-          --cov=vps --cov-branch --cov-report=term --cov-report=xml --cov-report=html
-          --junitxml=junit.xml --html=test-report.html --self-contained-html
-          --cov-fail-under=90
-      - name: Job summary
-        if: always()
-        run: python scripts/ci_summary.py tests junit.xml coverage.xml ${{ matrix.python }}
-      - name: Upload test & coverage reports
-        if: always()
-        uses: actions/upload-artifact@v6
+      - run: pip install -r requirements.txt
+      - name: Scan web/ for XSS sinks, dynamic code, inline scripts, third-party sources, secrets; check CSP
+        run: python scripts/ci_summary.py frontend-security
+
+  codeql:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: github/codeql-action/init@v4
         with:
-          name: test-reports-py${{ matrix.python }}
-          path: |
-            junit.xml
-            test-report.html
-            coverage.xml
-            htmlcov/
+          languages: python, javascript-typescript
+          build-mode: none
+      - uses: github/codeql-action/analyze@v4
 
   performance:
-    name: Performance & scalability (NF-001 / NF-003)
+    name: Performance & Scalability
     runs-on: ubuntu-latest
-    needs: test
+    needs: backend-tests
     # shared CI runners have noisy neighbours: results are published but do not block merges
     continue-on-error: true
     steps:
@@ -145,7 +212,7 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
       - run: pip install -r requirements-dev.txt
-      - name: Performance suite
+      - name: Performance suite (NF-001 latency, NF-003 10k slots / 50 lanes, F-018 exports)
         run: pytest tests/perf -v
         env:
           VPS_PERF_OUT: perf-metrics.json
@@ -159,9 +226,10 @@ jobs:
           path: perf-metrics.json
 
   summary:
-    name: Pipeline summary
+    name: Pipeline Summary
     runs-on: ubuntu-latest
-    needs: [lint, frontend, security, codeql, test, performance]
+    needs: [build, backend-tests, frontend-tests, backend-lint, frontend-lint, backend-security, frontend-security,
+            codeql, performance]
     if: always()
     steps:
       - uses: actions/checkout@v5
@@ -173,15 +241,20 @@ jobs:
           path: artifacts
       - name: Pipeline summary
         env:
-          JOB_LINT: ${{ needs.lint.result }}
-          JOB_FRONTEND: ${{ needs.frontend.result }}
-          JOB_SECURITY: ${{ needs.security.result }}
+          JOB_BUILD: ${{ needs.build.result }}
+          JOB_BACKEND_TESTS: ${{ needs.backend-tests.result }}
+          JOB_FRONTEND_TESTS: ${{ needs.frontend-tests.result }}
+          JOB_BACKEND_LINT: ${{ needs.backend-lint.result }}
+          JOB_FRONTEND_LINT: ${{ needs.frontend-lint.result }}
+          JOB_BACKEND_SECURITY: ${{ needs.backend-security.result }}
+          JOB_FRONTEND_SECURITY: ${{ needs.frontend-security.result }}
           JOB_CODEQL: ${{ needs.codeql.result }}
-          JOB_TESTS: ${{ needs.test.result }}
           JOB_PERFORMANCE: ${{ needs.performance.result }}
         run: python scripts/ci_summary.py pipeline artifacts
       - name: Fail if a required stage failed
         if: >
-          needs.lint.result != 'success' || needs.frontend.result != 'success' ||
-          needs.security.result != 'success' || needs.codeql.result != 'success' || needs.test.result != 'success'
+          needs.build.result != 'success' || needs.backend-tests.result != 'success' ||
+          needs.frontend-tests.result != 'success' || needs.backend-lint.result != 'success' ||
+          needs.frontend-lint.result != 'success' || needs.backend-security.result != 'success' ||
+          needs.frontend-security.result != 'success' || needs.codeql.result != 'success'
         run: exit 1
