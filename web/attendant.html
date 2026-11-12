@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VPS · Attendant POS</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="logo">P</span>Vehicle Parking System</div><nav></nav><div class="who"></div></header>
+<main>
+  <h1>Attendant fast-POS</h1>
+  <p class="sub">Exceptions desk: hardware &amp; security alerts, unreadable plates, cash billing, audited barrier overrides.</p>
+
+  <div class="card" id="login">
+    <h2>Sign in</h2>
+    <div class="row" style="max-width:640px">
+      <div><label for="u">Username</label><input id="u" value="attendant"></div>
+      <div><label for="p">Password</label><input id="p" type="password" value="Attendant@123"></div>
+      <div><button id="signin">Sign in</button></div>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="grid cols-2">
+      <div class="card">
+        <h2>Open alerts <span class="tag" id="acount">0</span></h2>
+        <div id="alerts"></div>
+      </div>
+      <div class="card">
+        <h2>Manual entry (unreadable plate)</h2>
+        <div class="row">
+          <div><label for="m-lane">Lane</label><select id="m-lane"><option>ENTRY-1</option><option>ENTRY-2</option></select></div>
+          <div><label for="m-plate">Plate (typed by attendant)</label><input id="m-plate" placeholder="TN09BX7712"></div>
+          <div><label for="m-cat">Category</label><select id="m-cat"><option>4W</option><option>2W</option><option>EV</option><option>HANDICAP</option></select></div>
+        </div>
+        <div class="btns"><button id="manual">Issue ticket</button></div>
+        <p class="muted" id="m-out"></p>
+      </div>
+      <div class="card">
+        <h2>Cash desk</h2>
+        <div class="row"><div><label for="c-plate">Vehicle plate</label><input id="c-plate" placeholder="KA05MN4821"></div>
+          <div><button class="secondary" id="c-find">Find</button></div></div>
+        <p id="c-info" class="muted"></p>
+        <div class="btns"><button id="c-pay" disabled>Collect cash &amp; open barrier</button></div>
+      </div>
+      <div class="card">
+        <h2>Barrier override</h2>
+        <div class="row">
+          <div><label for="o-lane">Lane</label><select id="o-lane"><option>ENTRY-1</option><option>ENTRY-2</option><option>EXIT-1</option><option>EXIT-2</option></select></div>
+          <div><label for="o-act">Action</label><select id="o-act"><option>RAISE</option><option>LOWER</option></select></div>
+        </div>
+        <label for="o-reason">Reason (written to the immutable audit log)</label>
+        <input id="o-reason" placeholder="Ambulance access">
+        <div class="btns"><button class="danger" id="override">Override barrier</button></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="static/app.js"></script>
+<script src="static/attendant.js"></script>
+</body>
+</html>
