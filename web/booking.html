@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VPS · Pre-book</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<header class="top"><div class="brand"><span class="logo">P</span>Vehicle Parking System</div><nav></nav><div class="who"></div></header>
+<main>
+  <h1>Pre-book a slot</h1>
+  <p class="sub">VPS-F-015 / F-016 · reserve up to 48 h ahead; arrive within 30 min of your start time or the slot is released.</p>
+  <div class="grid cols-2">
+    <div class="card">
+      <h2>New reservation</h2>
+      <div class="row">
+        <div><label for="plate">Number plate</label><input id="plate" value="MH12XY9090"></div>
+        <div><label for="cat">Category</label><select id="cat"><option>4W</option><option>2W</option><option>EV</option><option>HANDICAP</option></select></div>
+      </div>
+      <div class="row">
+        <div><label for="start">Start</label><input id="start" type="datetime-local"></div>
+        <div><label for="dur">Duration (hours)</label><input id="dur" type="number" min="1" max="24" value="2"></div>
+      </div>
+      <label for="contact">Mobile for confirmation (optional, stored encrypted)</label><input id="contact" placeholder="98xxxxxx21">
+      <div class="btns"><button id="book">Reserve slot</button></div>
+    </div>
+    <div class="card">
+      <h2>Your booking <span class="tag" id="bstate">–</span></h2>
+      <div id="none" class="empty">No reservation yet.</div>
+      <div id="res" class="hidden">
+        <div class="muted">Reservation code</div>
+        <div class="big mono" style="font-size:34px" id="code"></div>
+        <dl class="kv" style="margin-top:12px">
+          <dt>Slot</dt><dd id="slot"></dd><dt>Vehicle</dt><dd id="veh"></dd>
+          <dt>Window</dt><dd id="win"></dd><dt>Release if no-show after</dt><dd id="dead"></dd>
+        </dl>
+        <p class="muted">Enter this code at the entry kiosk. The plate must match.</p>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+      <div class="row">
+        <div><label for="lcode">Look up / cancel by code</label><input id="lcode" placeholder="7KQ2M9XA"></div>
+        <div><button class="secondary" id="lookup">Look up</button></div>
+        <div><button class="danger" id="cancel">Cancel</button></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="static/app.js"></script>
+<script src="static/booking.js"></script>
+</body>
+</html>
